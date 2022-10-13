@@ -1,15 +1,13 @@
-#! C:/Program Files/Nuke9.0v1/nuke-9.0.1.dll -nx
-version 9.0 v1
 Gizmo {
  tile_color 0xc17939ff
  addUserKnob {20 VoxelErode}
  addUserKnob {7 size l Size R -5 5}
  addUserKnob {41 mix T Copy1.mix}
  addUserKnob {20 graphics l GPU}
- addUserKnob {41 "Local GPU: " T BlinkScript1.gpuName}
- addUserKnob {41 "Use GPU if Available" T BlinkScript1.useGPUIfAvailable}
- addUserKnob {41 maxGPUMemory l "Percentage of GPU memory to use" T BlinkScript1.maxGPUMemory}
- addUserKnob {41 maxTileLines l "Percentage of image height per tile" T BlinkScript1.maxTileLines}
+ addUserKnob {41 "Local GPU: " T BlinkScript_erode.gpuName}
+ addUserKnob {41 "Use GPU if Available" T BlinkScript_erode.useGPUIfAvailable}
+ addUserKnob {41 maxGPUMemory l "Percentage of GPU memory to use" T BlinkScript_erode.maxGPUMemory}
+ addUserKnob {41 maxTileLines l "Percentage of image height per tile" T BlinkScript_erode.maxTileLines}
 }
  Input {
   inputs 0
@@ -23,7 +21,7 @@ Gizmo {
   xpos 111
   ypos -183
  }
-set N322ba800 [stack 0]
+set N9165650 [stack 0]
 add_layer {voxels voxels.x voxels.y voxels.z voxels.density}
  Shuffle {
   in2 voxels
@@ -37,19 +35,19 @@ add_layer {voxels voxels.x voxels.y voxels.z voxels.density}
   postage_stamp true
  }
  BlinkScript {
-  ProgramGroup 1
-  KernelDescription "1 \"VoxelErode\" iterate pixelWise 5878457dc41f59c360d549253627353cc2ddb7d25a5fa537658af703d79196b4 2 \"voxels\" Read Random \"dst\" Write Point 4 \"bbox_min\" Float 3 AAAAAAAAAAAAAAAAAAAAAA== \"bbox_max\" Float 3 AAAAAAAAAAAAAAAAAAAAAA== \"resolution\" Int 3 AAAAAAAAAAAAAAAAAAAAAA== \"size\" Float 1 AAAAAA=="
-  EncodedSource "1 2230 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"
+  kernelSourceFile bin/transform/erode.cpp
+  recompileCount 1
+  KernelDescription "2 \"VErode\" iterate pixelWise 4a8074b730e41e8384f9d3916e192849b41b1c393dd533aaac272cff9fe62f3b 2 \"voxels\" Read Random \"dst\" Write Point 4 \"bbox_min\" Float 3 AAAAAAAAAAAAAAAAAAAAAA== \"bbox_max\" Float 3 AAAAAAAAAAAAAAAAAAAAAA== \"resolution\" Int 3 AAAAAAAAAAAAAAAAAAAAAA== \"size\" Float 1 AAAAAA== 4 \"bbox_min\" 3 1 \"bbox_max\" 3 1 \"resolution\" 3 1 \"size\" 1 1 5 \"VoxelSizeInv\" Float 3 1 AAAAAAAAAAAAAAAAAAAAAA== \"negative\" Bool 1 1 AA== \"grid_width\" Int 1 1 AAAAAA== \"range\" Int 1 1 AAAAAA== \"max_length\" Float 1 1 AAAAAA=="
+  kernelSource "kernel VErode : ImageComputationKernel<ePixelWise>\n\{\n  Image<eRead, eAccessRandom> voxels;\n  Image<eWrite> dst;\n\n  param:\n    float3 bbox_min;\n    float3 bbox_max;\n    int3 resolution;\n    float size;\n\n  local:\n    float3 VoxelSizeInv;\n    bool negative;\n    int grid_width;\n    int range;\n    float max_length;\n\n  void init()\n  \{\n    for (int c = 0; c < 3; c++)\n      VoxelSizeInv\[c] = resolution\[c] / (bbox_max\[c] - bbox_min\[c]);\n    negative = size < 0;\n    grid_width = voxels.bounds.width();\n    range = negative ? floor(size) : ceil(size);\n    max_length = size * size;\n  \}\n\n  float voxelValue(int3 voxel)\n  \{\n    int id = (voxel.y * resolution.x + voxel.x) * resolution.z + voxel.z;\n    int x = id % grid_width;\n    int y = id / grid_width;\n    return voxels(x, y, 3); // Just alpha (density)\n  \}\n\n  void process(int2 pos)\n  \{\n    float4 current = voxels(pos.x, pos.y);\n    int3 voxel;\n    for (int c = 0; c < 3; c++)\n      voxel\[c] = int((current\[c] - bbox_min\[c]) * VoxelSizeInv\[c]);\n\n    float length, new_val = voxelValue(voxel);\n    if (negative)\n    \{\n      // Minimum value within specified range\n      for (int i = max(voxel.x + range, 0); i <= min(voxel.x - range, resolution.x - 1); i++)\n        for (int j = max(voxel.y + range, 0); j <= min(voxel.y - range, resolution.y - 1); j++)\n          for (int k = max(voxel.z + range, 0); k <= min(voxel.z - range, resolution.z - 1); k++)\n          \{\n            length = pow(i - voxel.x, 2) + pow(j - voxel.y, 2) + pow(k - voxel.z, 2);\n            new_val = min(new_val, voxelValue(int3(i, j, k)) + 10000.0f * (length > max_length));\n          \}\n    \}\n    else\n    \{\n      // Maximum value within specified range\n      for (int i = max(voxel.x - range, 0); i <= min(voxel.x + range, resolution.x - 1); i++)\n        for (int j = max(voxel.y - range, 0); j <= min(voxel.y + range, resolution.y - 1); j++)\n          for (int k = max(voxel.z - range, 0); k <= min(voxel.z + range, resolution.z - 1); k++)\n          \{\n            length = pow(i - voxel.x, 2) + pow(j - voxel.y, 2) + pow(k - voxel.z, 2);\n            new_val = max(new_val, voxelValue(int3(i, j, k)) - 10000.0f * (length > max_length));\n          \}\n    \}\n\n    dst() = current;\n    dst(3) = new_val;\n  \}\n\};"
   rebuild ""
-  VoxelErode_bbox_min {{"\[lindex \[metadata bbox] 0]"} {"\[lindex \[metadata bbox] 1]"} {"\[lindex \[metadata bbox] 2]"}}
-  VoxelErode_bbox_max {{"\[lindex \[metadata bbox] 3]"} {"\[lindex \[metadata bbox] 4]"} {"\[lindex \[metadata bbox] 5]"}}
-  VoxelErode_resolution {{"\[lindex \[metadata resolution] 0]"} {"\[lindex \[metadata resolution] 1]"} {"\[lindex \[metadata resolution] 2]"}}
-  VoxelErode_size {{parent.size}}
-  protectKernelWhenPublishing true
-  name BlinkScript1
-  selected true
+  VErode_bbox_min {{"\[lindex \[metadata bbox] 0]"} {"\[lindex \[metadata bbox] 1]"} {"\[lindex \[metadata bbox] 2]"}}
+  VErode_bbox_max {{"\[lindex \[metadata bbox] 3]"} {"\[lindex \[metadata bbox] 4]"} {"\[lindex \[metadata bbox] 5]"}}
+  VErode_resolution {{"\[lindex \[metadata resolution] 0]"} {"\[lindex \[metadata resolution] 1]"} {"\[lindex \[metadata resolution] 2]"}}
+  VErode_size {{parent.size}}
+  rebuild_finalise ""
+  name BlinkScript_erode
   xpos 77
-  ypos -35
+  ypos -38
  }
  Dot {
   name Dot2
@@ -57,7 +55,7 @@ add_layer {voxels voxels.x voxels.y voxels.z voxels.density}
   xpos 111
   ypos 28
  }
-push $N322ba800
+push $N9165650
  Dot {
   name Dot3
   note_font_size 20

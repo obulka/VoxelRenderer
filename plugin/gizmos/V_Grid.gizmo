@@ -1,5 +1,3 @@
-#! C:/Program Files/Nuke9.0v1/nuke-9.0.1.dll -nx
-version 9.0 v1
 Gizmo {
  inputs 0
  tile_color 0xc44b11ff
@@ -13,10 +11,10 @@ Gizmo {
  uniform true
  addUserKnob {41 color l Color T Constant1.color}
  addUserKnob {20 graphics l GPU}
- addUserKnob {41 "Local GPU: " T BlinkScript1.gpuName}
- addUserKnob {41 "Use GPU if Available" T BlinkScript1.useGPUIfAvailable}
- addUserKnob {41 maxGPUMemory l "Percentage of GPU memory to use" T BlinkScript1.maxGPUMemory}
- addUserKnob {41 maxTileLines l "Percentage of image height per tile" T BlinkScript1.maxTileLines}
+ addUserKnob {41 "Local GPU: " T BlinkScript_grid.gpuName}
+ addUserKnob {41 "Use GPU if Available" T BlinkScript_grid.useGPUIfAvailable}
+ addUserKnob {41 maxGPUMemory l "Percentage of GPU memory to use" T BlinkScript_grid.maxGPUMemory}
+ addUserKnob {41 maxTileLines l "Percentage of image height per tile" T BlinkScript_grid.maxTileLines}
 }
  Axis2 {
   inputs 0
@@ -47,7 +45,7 @@ Gizmo {
   xpos 159
   ypos -29
  }
-set N32396400 [stack 0]
+set N8e345a0 [stack 0]
  Dot {
   name Dot2
   note_font_size 20
@@ -55,18 +53,18 @@ set N32396400 [stack 0]
   ypos -25
  }
  BlinkScript {
-  ProgramGroup 1
+  kernelSourceFile bin/generate/grid.cpp
   KernelDescription "1 \"VGrid\" iterate pixelWise 3b140e8cbfda428ac95853bd9e9761e44d4c51aad2633cdb8042495cb9b9755b 2 \"format\" Read Point \"dst\" Write Point 4 \"bbox_min\" Float 3 AAAAAAAAAAAAAAAAAAAAAA== \"bbox_max\" Float 3 AAAAAAAAAAAAAAAAAAAAAA== \"resolution\" Int 3 AAAAAAAAAAAAAAAAAAAAAA== \"total\" Int 1 AAAAAA=="
-  EncodedSource "1 754 LuM0b1tYHKw4u2GX42C1A37F0jmNLoqwBwUnaVvdBuW1oD0JBBYUZKCFZ0r+fLFTuzEYGraNh1znI82yA8BP74tQLs97hhwZHy2FsGqNiLZj2dgQnOBniPMQ7z2pYIvY7EMjbzB2D9C747vRpM9DTfdQPyoLZFPF6fXfzS28ino4eOTVeYkVlEkQfkZtjbpPw6vMH6DFskW0VbwBpFjuXmM0LZQy+WU4YnyjbWLVG6TQN0oQnGX9PQRnX0Ekb2qLLhlrvZSYTjxZivrycjdvG8qHyfbyNEG+yI26hSTiA+O1PixzmgGQS/zm0JHZ4ShSD4NPvG2kNaFdzkau8zNZi+vlk7H5EOALQ6Y9VDmXZMDKVGFO6k/wbzFnCqzFpIL/DsCPADYfuLFOW4FuDK85bOYqkZxR6+XFBEThFSHy3Pcq+087PFvzleSoAWjvJPqbnMfOPvVwcS3mTDXVG414by0VjENTAMGWBI+N6gs2ycixOcm5VErRv1cKUGkQSi8VCc7DShyJdlXtkjuaMm+Iyr3JBfkhpupVAEnK5wgZv+kZoCuyJdX5sy+pdZe8C2U8iGtGxZRdo1RzmX3mD7Kjcyy8xqEXkbvGFecXFowMNhA2APHOyR95pLRwBXir/j+SKoQWOe9ui7uJ6vWMnQoGzidtaBH6wOYyjrmhzboFHtH48zJLZlmyaMclpn99vwLlvyidM7I/SVJC8Gh41Mm4JivvrVGXn8bZdO6VryxV9tZutU80szMbe+jvVbrcxYHIWjJLcBiOcUJQb3qU9Sv/w6panR/jzMv0i+/nN0YK9MDPjf3s3f59gT21a+SiJjm93upzrtulbTMNRkZwdTMEmTm10dyIdyld0BoLyUdfEgaK9TBj1QaP36pdmVNsUinXHLV/CGsSKzegCTcO5aCEeI+sHw7fAs5F0YIs1Z8MQ58twQiOHlgWENStY3w+2jVO2LUYF6LKuJt/l/tLzVdhsLoFAgYzK5rWudb7cb6xxks17N8QEZP3PoMvNecqjRr2"
+  kernelSource "kernel VGrid : ImageComputationKernel<ePixelWise>\n\{\n  Image<eRead> format;\n  Image<eWrite> dst;\n\n  param:\n    float3 bbox_min; // from origin\n    float3 bbox_max; // from origin\n    int3 resolution;\n    int total;\n\n  local:\n    float3 scale;\n\n  void init()\n  \{\n    for (int c = 0; c < 3; c++)\n      scale\[c] = (bbox_max\[c] - bbox_min\[c]) / resolution\[c];\n  \}\n\n  void process(int2 pos)\n  \{\n    int id = pos.y * dst.bounds.width() + pos.x;\n    if (id >= total)\n    \{\n      dst() = 0;\n      return;\n    \}\n    int xy = id / resolution.z;\n    dst(0) = ((xy % resolution.x) + 0.5f) * scale.x + bbox_min.x;\n    dst(1) = ((xy / resolution.x) + 0.5f) * scale.y + bbox_min.y;\n    dst(2) = ((id % resolution.z) + 0.5f) * scale.z + bbox_min.z;\n    dst(3) = 1;\n  \}\n\};"
   rebuild ""
   VGrid_bbox_min {{parent.voxel_bbox.x} {parent.voxel_bbox.y} {parent.voxel_bbox.n}}
   VGrid_bbox_max {{parent.voxel_bbox.r} {parent.voxel_bbox.t} {parent.voxel_bbox.f}}
   VGrid_resolution {{CONTROL.resolution.x} {CONTROL.resolution.y} {CONTROL.resolution.z}}
   VGrid_total {{CONTROL.total}}
-  protectKernelWhenPublishing true
-  name BlinkScript1
+  rebuild_finalise ""
+  name BlinkScript_grid
   xpos 51
-  ypos 31
+  ypos 33
  }
  Dot {
   name Dot1
@@ -74,7 +72,7 @@ set N32396400 [stack 0]
   xpos 85
   ypos 103
  }
-push $N32396400
+push $N8e345a0
 add_layer {voxels voxels.x voxels.y voxels.z voxels.density}
  ShuffleCopy {
   inputs 2
@@ -106,7 +104,6 @@ add_layer {voxels voxels.x voxels.y voxels.z voxels.density}
  NoOp {
   inputs 0
   name CONTROL
-  selected true
   xpos 284
   ypos 39
   addUserKnob {20 User}

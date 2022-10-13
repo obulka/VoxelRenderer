@@ -1,5 +1,3 @@
-#! C:/Program Files/Nuke9.0v1/nuke-9.0.1.dll -nx
-version 9.0 v1
 Gizmo {
  inputs 2
  tile_color 0xc19139ff
@@ -12,14 +10,14 @@ Gizmo {
  absorption 0.5
  addUserKnob {3 samples l Samples t "How many samples to take per pixel. higher values will give more accurate results at the cost of speed."}
  samples 64
- addUserKnob {26 "" +STARTLINE}
+ addUserKnob {26 ""}
  addUserKnob {41 operation T Merge.operation}
  addUserKnob {41 mix T Merge.mix}
  addUserKnob {20 graphics l GPU}
- addUserKnob {41 "Local GPU: " T BlinkScript1.gpuName}
- addUserKnob {41 "Use GPU if Available" T BlinkScript1.useGPUIfAvailable}
- addUserKnob {41 maxGPUMemory l "Percentage of GPU memory to use" T BlinkScript1.maxGPUMemory}
- addUserKnob {41 maxTileLines l "Percentage of image height per tile" T BlinkScript1.maxTileLines}
+ addUserKnob {41 "Local GPU: " T BlinkScript_point.gpuName}
+ addUserKnob {41 "Use GPU if Available" T BlinkScript_point.useGPUIfAvailable}
+ addUserKnob {41 maxGPUMemory l "Percentage of GPU memory to use" T BlinkScript_point.maxGPUMemory}
+ addUserKnob {41 maxTileLines l "Percentage of image height per tile" T BlinkScript_point.maxTileLines}
 }
  Input {
   inputs 0
@@ -42,10 +40,10 @@ Gizmo {
   xpos 637
   ypos 74
  }
-set N4d325000 [stack 0]
+set N8f6fa00 [stack 0]
  Clamp {
   channels alpha
-  maximum 1.#INF
+  maximum inf
   name Clamp
   xpos 603
   ypos 116
@@ -63,9 +61,11 @@ add_layer {voxels voxels.x voxels.y voxels.z voxels.density}
   postage_stamp true
  }
  BlinkScript {
+  kernelSourceFile bin/light/point.cpp
+  recompileCount 1
   ProgramGroup 1
-  KernelDescription "1 \"VPtLight\" iterate pixelWise ba9be73e015472e04940da642fd6d4b614fba9085b168cbbff6669efdee47694 2 \"voxels\" Read Random \"dst\" Write Point 8 \"bbox_min\" Float 3 AAAAAAAAAAAAAAAAAAAAAA== \"bbox_max\" Float 3 AAAAAAAAAAAAAAAAAAAAAA== \"resolution\" Int 3 AAAAAAAAAAAAAAAAAAAAAA== \"light\" Float 3 AAAAAAAAAAAAAAAAAAAAAA== \"intensity\" Float 1 AACAPw== \"absorption\" Float 1 AAAAPw== \"samples\" Int 1 MgAAAA== \"transform_M\" Float 16 AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=="
-  EncodedSource "1 4018 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"
+  KernelDescription "2 \"VPtLight\" iterate pixelWise 3970e420d27d661986efe10ae3362d4593af2221d5f9d0f84cb692898ac01e3c 2 \"voxels\" Read Random \"dst\" Write Point 8 \"bbox_min\" Float 3 AAAAAAAAAAAAAAAAAAAAAA== \"bbox_max\" Float 3 AAAAAAAAAAAAAAAAAAAAAA== \"resolution\" Int 3 AAAAAAAAAAAAAAAAAAAAAA== \"light\" Float 3 AAAAAAAAAAAAAAAAAAAAAA== \"intensity\" Float 1 AACAPw== \"absorption\" Float 1 AAAAPw== \"samples\" Int 1 MgAAAA== \"transform_M\" Float 16 AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA== 8 \"bbox_min\" 3 1 \"bbox_max\" 3 1 \"resolution\" 3 1 \"light\" 3 1 \"intensity\" 1 1 \"absorption\" 1 1 \"samples\" 1 1 \"transform_M\" 16 1 5 \"aabb\" Float 3 2 AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA= \"VoxelSizeInv\" Float 3 1 AAAAAAAAAAAAAAAAAAAAAA== \"_light\" Float 3 1 AAAAAAAAAAAAAAAAAAAAAA== \"grid_width\" Int 1 1 AAAAAA== \"_samples\" Int 1 1 AAAAAA=="
+  kernelSource "kernel VPtLight : ImageComputationKernel<ePixelWise>\n\{\n  Image<eRead, eAccessRandom> voxels;\n  Image<eWrite> dst;\n\n  param:\n    float3 bbox_min;\n    float3 bbox_max;\n    int3 resolution;\n    float3 light;\n    float intensity;\n    float absorption;\n    int samples;\n    float4x4 transform_M;\n\n  local:\n    float3 aabb\[2];\n    float3 VoxelSizeInv;\n    float3 _light;\n    int grid_width;\n    int _samples;\n\n  void define()\n  \{\n    defineParam(intensity, \"intensity\", 1.0f);\n    defineParam(absorption, \"absorption\", 0.5f);\n    defineParam(samples, \"samples\", 50);\n  \}\n\n  void init()\n  \{\n    aabb\[0] = bbox_min;\n    aabb\[1] = bbox_max;\n\n    for (int c = 0; c < 3; c++)\n      VoxelSizeInv\[c] = resolution\[c] / (bbox_max\[c] - bbox_min\[c]);\n\n    _light = multVectMatrix(light, transform_M.invert());\n\n    grid_width = voxels.bounds.width();\n    _samples = max(1, samples);\n  \}\n\n  float3 multVectMatrix(float3 vec, float4x4 M)\n  \{\n    float3 out = float3(\n      vec.x * M\[0]\[0] + vec.y * M\[0]\[1] + vec.z * M\[0]\[2] + M\[0]\[3],\n      vec.x * M\[1]\[0] + vec.y * M\[1]\[1] + vec.z * M\[1]\[2] + M\[1]\[3],\n      vec.x * M\[2]\[0] + vec.y * M\[2]\[1] + vec.z * M\[2]\[2] + M\[2]\[3]\n    );\n\n    return out;\n  \}\n\n  // Axis aligned bounding box intersection for GPU : Shortened for exit only\n  float intersection_exit_AABB(float3 origin, float3 inv_dir)\n  \{\n    //bool sign\[3] \{inv_dir.x < 0, inv_dir.y < 0, inv_dir.z < 0\};\n    float tmin, tmax, tymin, tymax, tzmin, tzmax;\n    bool sign = inv_dir.x < 0 ? 0 : 1;\n    tmax  = (aabb\[sign].x - origin.x) * inv_dir.x;\n    sign = inv_dir.y < 0 ? 0 : 1;\n    tymax = (aabb\[sign].y - origin.y) * inv_dir.y;\n    sign = inv_dir.z < 0 ? 0 : 1;\n    tzmax = (aabb\[sign].z - origin.z) * inv_dir.z;\n    tmax = min(min(tmax, tymax), tzmax);\n    return tmax;\n  \}\n\n  float voxelValue(int3 voxel)\n  \{\n    // Return Empty for values outside of grid\n    if (voxel.x < 0 || resolution.x <= voxel.x ||\n        voxel.y < 0 || resolution.y <= voxel.y ||\n        voxel.z < 0 || resolution.z <= voxel.z )\n      return 0;\n\n    int id = (voxel.y * resolution.x + voxel.x) * resolution.z + voxel.z;\n    int x = id % grid_width;\n    int y = id / grid_width;\n    return voxels(x, y, 3); // Just alpha (density)\n  \}\n\n  float Blend(float3 curpos)\n  \{\n    float3 weight, voxel_space;\n    int3 base_voxel, offset;\n    // Lower Bound of 8 adjacent voxels\n    for (int c = 0; c < 3; c++)\n    \{\n      voxel_space\[c] = curpos\[c] * VoxelSizeInv\[c];\n      base_voxel\[c] = int(floor(voxel_space\[c] - 0.5f));\n    \}\n\n    float result = 0;\n    for (int i = 0; i < 8; i++)\n    \{\n      // Weighted distance on each axis for each adjacent voxel\n      offset = int3(i / 4, (i / 2) % 2, i % 2);\n      weight.x = 1 - fabs(offset.x - (voxel_space.x - (base_voxel.x + 0.5f)));\n      weight.y = 1 - fabs(offset.y - (voxel_space.y - (base_voxel.y + 0.5f)));\n      weight.z = 1 - fabs(offset.z - (voxel_space.z - (base_voxel.z + 0.5f)));\n\n      result += voxelValue(base_voxel + offset) * weight.x * weight.y * weight.z;\n    \}\n\n    return result;\n  \}\n\n  void process(int2 pos)\n  \{\n    // Skip empty voxels\n    float4 v = voxels(pos.x, pos.y);\n    if (v.w <= 0)\n      return;\n\n    // Starting values\n    float3 voxel = float3(v.x, v.y, v.z); // Center of voxel\n    float3 dir = voxel - _light; // from light to voxel\n    float dist_to_light = length(dir);\n    dir /= dist_to_light;\n\n    // Fire ray towards light, get closest distance\n    float max_dist = min(dist_to_light, intersection_exit_AABB(voxel, -1.0f / dir));\n\n    // ========== Ray Marching ==========\n\n    // Maximum of 1000 samples per voxel\n    float deltaT, result = intensity, step = max(max_dist / _samples, 0.001f);\n    float3 curpos;\n\n    for (float dist = 0; dist <= max_dist; dist += step)\n    \{\n      curpos = voxel - dir * dist;\n      deltaT = exp(-absorption * Blend(curpos - bbox_min) * step);\n      result *= deltaT;\n\n      // End loop if Transmittance is near 0\n      if (result < 1e-6)\n      \tbreak;\n      //dist += (result < 1e-6) * max_dist;\n    \}\n\n    dst() = result;\n\n  \}\n\n\};"
   rebuild ""
   VPtLight_bbox_min {{"\[lindex \[metadata bbox] 0]"} {"\[lindex \[metadata bbox] 1]"} {"\[lindex \[metadata bbox] 2]"}}
   VPtLight_bbox_max {{"\[lindex \[metadata bbox] 3]"} {"\[lindex \[metadata bbox] 4]"} {"\[lindex \[metadata bbox] 5]"}}
@@ -80,13 +80,12 @@ add_layer {voxels voxels.x voxels.y voxels.z voxels.density}
       {{"\[lindex \[lindex \[metadata vTransformMatrix frame] 2] 0]"} {"\[lindex \[lindex \[metadata vTransformMatrix frame] 2] 1]"} {"\[lindex \[lindex \[metadata vTransformMatrix frame] 2] 2]"} {"\[lindex \[lindex \[metadata vTransformMatrix frame] 2] 3]"}}
       {{"\[lindex \[lindex \[metadata vTransformMatrix frame] 3] 0]"} {"\[lindex \[lindex \[metadata vTransformMatrix frame] 3] 1]"} {"\[lindex \[lindex \[metadata vTransformMatrix frame] 3] 2]"} {"\[lindex \[lindex \[metadata vTransformMatrix frame] 3] 3]"}}
     }
-  protectKernelWhenPublishing true
-  name BlinkScript1
-  selected true
+  rebuild_finalise ""
+  name BlinkScript_point
   xpos 603
   ypos 278
  }
-set N410b2400 [stack 0]
+set N8f93c50 [stack 0]
  Dot {
   name Dot9
   note_font_size 20
@@ -105,8 +104,8 @@ set N410b2400 [stack 0]
   xpos 527
   ypos 406
  }
-set N4d355800 [stack 0]
-push $N4d325000
+set N8fc7b60 [stack 0]
+push $N8f6fa00
  Dot {
   name Dot3
   note_font_size 20
@@ -126,7 +125,7 @@ push $N4d325000
   xpos 307
   ypos 288
  }
-set N4d354c00 [stack 0]
+set N8fdd660 [stack 0]
  Add {
   value {1 0.915 0.775 1}
   value_panelDropped true
@@ -148,14 +147,14 @@ set N4d354c00 [stack 0]
   xpos 307
   ypos 537
  }
-push $N4d355800
+push $N8fc7b60
  Invert {
   channels alpha
   name Invert1
   xpos 493
   ypos 458
  }
-push $N4d354c00
+push $N8fdd660
  Dot {
   name Dot6
   note_font_size 20
@@ -190,7 +189,7 @@ push $N4d354c00
   xpos 417
   ypos 601
  }
-push $N410b2400
+push $N8f93c50
  Merge2 {
   inputs 2
   operation multiply
@@ -204,7 +203,7 @@ push $N410b2400
   xpos 637
   ypos 738
  }
-push $N4d325000
+push $N8f6fa00
  Dot {
   name Dot4
   note_font_size 20

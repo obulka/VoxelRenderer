@@ -1,5 +1,3 @@
-#! C:/Program Files/Nuke9.0v1/nuke-9.0.1.dll -nx
-version 9.0 v1
 Gizmo {
  inputs 2
  tile_color 0xc19139ff
@@ -14,14 +12,14 @@ Gizmo {
  range 2
  addUserKnob {3 samples l Samples t "How many samples to take per voxel. Higher values will give more accurate results at the cost of speed."}
  samples 64
- addUserKnob {26 "" +STARTLINE}
+ addUserKnob {26 ""}
  addUserKnob {41 operation T Merge.operation}
  addUserKnob {41 mix T Merge.mix}
  addUserKnob {20 graphics l GPU}
- addUserKnob {41 "Local GPU: " T BlinkScript1.gpuName}
- addUserKnob {41 "Use GPU if Available" T BlinkScript1.useGPUIfAvailable}
- addUserKnob {41 maxGPUMemory l "Percentage of GPU memory to use" T BlinkScript1.maxGPUMemory}
- addUserKnob {41 maxTileLines l "Percentage of image height per tile" T BlinkScript1.maxTileLines}
+ addUserKnob {41 "Local GPU: " T BlinkScript_environment.gpuName}
+ addUserKnob {41 "Use GPU if Available" T BlinkScript_environment.useGPUIfAvailable}
+ addUserKnob {41 maxGPUMemory l "Percentage of GPU memory to use" T BlinkScript_environment.maxGPUMemory}
+ addUserKnob {41 maxTileLines l "Percentage of image height per tile" T BlinkScript_environment.maxTileLines}
 }
  Input {
   inputs 0
@@ -44,10 +42,10 @@ Gizmo {
   xpos 1238
   ypos -288
  }
-set N4d643000 [stack 0]
+set N8e9d540 [stack 0]
  Clamp {
   channels alpha
-  maximum 1.#INF
+  maximum inf
   name Clamp
   xpos 1204
   ypos -244
@@ -66,9 +64,11 @@ add_layer {voxels voxels.x voxels.y voxels.z voxels.density}
  }
  BlinkScript {
   inputs 2
+  kernelSourceFile bin/light/environment.cpp
+  recompileCount 3
   ProgramGroup 1
-  KernelDescription "1 \"VEnvLight\" iterate pixelWise c11143e3588aa0102d052d41d74a7f94f65593a51b5fcc80a5769d05a7c6ae54 3 \"voxels\" Read Random \"environment\" Read Random \"dst\" Write Point 9 \"bbox_min\" Float 3 AAAAAAAAAAAAAAAAAAAAAA== \"bbox_max\" Float 3 AAAAAAAAAAAAAAAAAAAAAA== \"resolution\" Int 3 AAAAAAAAAAAAAAAAAAAAAA== \"luminance_on\" Bool 1 AA== \"rotate\" Float 1 AAAAAA== \"intensity\" Float 1 AACAPw== \"absorption\" Float 1 AAAAPw== \"samples\" Int 1 MgAAAA== \"transform_M\" Float 16 AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=="
-  EncodedSource "1 5270 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"
+  KernelDescription "2 \"VEnvLight\" iterate pixelWise 225acdc2746eca07af124455c8339bae60231ac225fe547600ae86103c98b855 3 \"voxels\" Read Random \"environment\" Read Random \"dst\" Write Point 9 \"bbox_min\" Float 3 AAAAAAAAAAAAAAAAAAAAAA== \"bbox_max\" Float 3 AAAAAAAAAAAAAAAAAAAAAA== \"resolution\" Int 3 AAAAAAAAAAAAAAAAAAAAAA== \"luminance_on\" Bool 1 AA== \"rotate\" Float 1 AAAAAA== \"intensity\" Float 1 AACAPw== \"absorption\" Float 1 AAAAPw== \"samples\" Int 1 MgAAAA== \"transform_M\" Float 16 AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA== 9 \"bbox_min\" 3 1 \"bbox_max\" 3 1 \"resolution\" 3 1 \"luminance_on\" 1 1 \"rotate\" 1 1 \"intensity\" 1 1 \"absorption\" 1 1 \"samples\" 1 1 \"transform_M\" 16 1 6 \"aabb\" Float 3 2 AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA= \"VoxelSizeInv\" Float 3 1 AAAAAAAAAAAAAAAAAAAAAA== \"_absorption\" Float 1 1 AAAAAA== \"grid_width\" Int 1 1 AAAAAA== \"rad2deg\" Float 1 1 AAAAAA== \"_samples\" Int 1 1 AAAAAA=="
+  kernelSource "kernel VEnvLight : ImageComputationKernel<ePixelWise>\n\{\n  Image<eRead, eAccessRandom> voxels;\n  Image<eRead, eAccessRandom> environment;\n  Image<eWrite> dst;\n\n  param:\n    float3 bbox_min;\n    float3 bbox_max;\n    int3 resolution;\n    bool luminance_on;\n    float rotate;\n    float intensity;\n    float absorption;\n    int samples;\n    float4x4 transform_M;\n\n  local:\n    float3 aabb\[2];\n    float3 VoxelSizeInv;\n    float _absorption;\n    int grid_width;\n    float rad2deg;\n    int _samples;\n\n  void define()\n  \{\n    defineParam(intensity, \"intensity\", 1.0f);\n    defineParam(absorption, \"absorption\", 0.5f);                   // Absorption? Rate of Decay\n    defineParam(samples, \"samples\", 50);\n  \}\n\n  void init()\n  \{\n    aabb\[0] = bbox_min;\n    aabb\[1] = bbox_max;\n    grid_width = voxels.bounds.width();\n\n    for (int c = 0; c < 3; c++)\n      VoxelSizeInv\[c] = resolution\[c] / (bbox_max\[c] - bbox_min\[c]);\n\n    _absorption = 1 / (1 - absorption);\n    rad2deg = 180.0f / PI;\n    _samples = max(1, samples);\n  \}\n\n  float3 multVectMatrix(float3 vec, float4x4 M)\n  \{\n    float3 out = float3(\n      vec.x * M\[0]\[0] + vec.y * M\[0]\[1] + vec.z * M\[0]\[2] + M\[0]\[3],\n      vec.x * M\[1]\[0] + vec.y * M\[1]\[1] + vec.z * M\[1]\[2] + M\[1]\[3],\n      vec.x * M\[2]\[0] + vec.y * M\[2]\[1] + vec.z * M\[2]\[2] + M\[2]\[3]\n    );\n\n    return out;\n  \}\n\n  // Axis aligned bounding box intersection for GPU : Shortened for exit only\n  float intersection_exit_AABB(float3 origin, float3 inv_dir)\n  \{\n    //bool sign\[3] \{inv_dir.x < 0, inv_dir.y < 0, inv_dir.z < 0\};\n    float tmin, tmax, tymin, tymax, tzmin, tzmax;\n    bool sign = inv_dir.x < 0 ? 0 : 1;\n    tmax  = (aabb\[sign].x - origin.x) * inv_dir.x;\n    sign = inv_dir.y < 0 ? 0 : 1;\n    tymax = (aabb\[sign].y - origin.y) * inv_dir.y;\n    sign = inv_dir.z < 0 ? 0 : 1;\n    tzmax = (aabb\[sign].z - origin.z) * inv_dir.z;\n    tmax = min(min(tmax, tymax), tzmax);\n    return tmax;\n  \}\n\n  float voxelValue(int3 voxel)\n  \{\n    // Return Empty for values outside of grid\n    if (voxel.x < 0 || resolution.x <= voxel.x ||\n        voxel.y < 0 || resolution.y <= voxel.y ||\n        voxel.z < 0 || resolution.z <= voxel.z )\n      return 0;\n\n    int id = (voxel.y * resolution.x + voxel.x) * resolution.z + voxel.z;\n    int x = id % grid_width;\n    int y = id / grid_width;\n    return voxels(x, y, 3); // Just alpha (density)\n  \}\n\n  float Blend(float3 curpos)\n  \{\n    float3 weight, voxel_space;\n    int3 base_voxel, offset;\n    // Lower Bound of 8 adjacent voxels\n    for (int c = 0; c < 3; c++)\n    \{\n      voxel_space\[c] = curpos\[c] * VoxelSizeInv\[c];\n      base_voxel\[c] = int(floor(voxel_space\[c] - 0.5f));\n    \}\n\n    float result = 0;\n    for (int i = 0; i < 8; i++)\n    \{\n      // Weighted distance on each axis for each adjacent voxel\n      offset = int3(i / 4, (i / 2) % 2, i % 2);\n      weight.x = 1 - fabs(offset.x - (voxel_space.x - (base_voxel.x + 0.5f)));\n      weight.y = 1 - fabs(offset.y - (voxel_space.y - (base_voxel.y + 0.5f)));\n      weight.z = 1 - fabs(offset.z - (voxel_space.z - (base_voxel.z + 0.5f)));\n\n      result += voxelValue(base_voxel + offset) * weight.x * weight.y * weight.z;\n    \}\n\n    return result;\n  \}\n\n  void process(int2 pos)\n  \{\n    // Skip empty voxels\n    float4 v = voxels(pos.x, pos.y);\n    if (v.w <= 0)\n      return;\n\n\n    // ========== AMBIENT LIGHT ==========\n\n    // Fire a ray from outer sphere to voxel, accumulate fog\n\n    // Starting values\n    float3 voxel = float3(v.x, v.y, v.z); // Center of voxel\n\n    int3 voxel_i;\n    for (int c = 0; c < 3; c++)\n      voxel_i\[c] = (voxel\[c] - bbox_min\[c]) * VoxelSizeInv\[c];\n\n    float3 normal = float3(\n      voxelValue(voxel_i - int3(1,0,0)) - voxelValue(voxel_i + int3(1,0,0)),\n      voxelValue(voxel_i - int3(0,1,0)) - voxelValue(voxel_i + int3(0,1,0)),\n      voxelValue(voxel_i - int3(0,0,1)) - voxelValue(voxel_i + int3(0,0,1))\n      );\n\n    float3 dir = -normalize(normal);\n    // Skip directionless voxels\n    if (dir.x == 0 && dir.y == 0 && dir.z == 0) return;\n\n    float3 dir_inv = 1.0f / dir;\n\n    // Convert direction to latlong coordinates\n    float3 env_dir = normalize(multVectMatrix(dir, transform_M));\n    float x = (fmod((rad2deg * atan2(env_dir.z, env_dir.x) + rotate), 360.0f) / 360.0f + 0.5f) * environment.bounds.width();\n    float y = ((rad2deg * acos(env_dir.y)) / 180.0f) * environment.bounds.height();\n\n    float4 colour = environment(x, y);\n    float luminance = (colour.x * 0.3f + colour.y * 0.59f + colour.z * 0.11f) * intensity;\n\n    // Move starting point to whatever's closest: intersection / light\n    float max_dist = intersection_exit_AABB(voxel, -dir_inv);\n\n    // ========== Ray Marching ==========\n\n    // Maximum of 1000 samples per voxel\n    float result = luminance * luminance_on + intensity * (1 - luminance_on);\n    float deltaT = 1, step = max(max_dist / _samples, 0.001f);\n    float3 curpos;\n\n    for (float dist = 0; dist <= max_dist; dist += step)\n    \{\n      curpos = voxel - dir * dist;\n      deltaT = exp(-absorption * Blend(curpos - bbox_min) * step);\n      result *= deltaT;\n\n      // End loop if Transmittance is near 0\n      if (result < 1e-6)\n        break;\n      //dist += (result < 1e-6) * max_dist;\n    \}\n\n    dst() = result * environment(x, y);\n    dst(3) = v.w;\n    \n  \}\n\n\};"
   rebuild ""
   VEnvLight_bbox_min {{"\[lindex \[metadata bbox] 0]"} {"\[lindex \[metadata bbox] 1]"} {"\[lindex \[metadata bbox] 2]"}}
   VEnvLight_bbox_max {{"\[lindex \[metadata bbox] 3]"} {"\[lindex \[metadata bbox] 4]"} {"\[lindex \[metadata bbox] 5]"}}
@@ -84,9 +84,8 @@ add_layer {voxels voxels.x voxels.y voxels.z voxels.density}
       {{"\[lindex \[lindex \[metadata vTransformMatrix frame] 2] 0]"} {"\[lindex \[lindex \[metadata vTransformMatrix frame] 2] 1]"} {"\[lindex \[lindex \[metadata vTransformMatrix frame] 2] 2]"} {"\[lindex \[lindex \[metadata vTransformMatrix frame] 2] 3]"}}
       {{"\[lindex \[lindex \[metadata vTransformMatrix frame] 3] 0]"} {"\[lindex \[lindex \[metadata vTransformMatrix frame] 3] 1]"} {"\[lindex \[lindex \[metadata vTransformMatrix frame] 3] 2]"} {"\[lindex \[lindex \[metadata vTransformMatrix frame] 3] 3]"}}
     }
-  protectKernelWhenPublishing true
-  name BlinkScript1
-  selected true
+  rebuild_finalise ""
+  name BlinkScript_environment
   xpos 1204
   ypos -84
  }
@@ -124,7 +123,7 @@ add_layer {voxels voxels.x voxels.y voxels.z voxels.density}
    xpos 396
    ypos -557
   }
-set N4d412400 [stack 0]
+set N8f04000 [stack 0]
   Shuffle {
    in voxels
    in2 rgba
@@ -141,7 +140,7 @@ set N4d412400 [stack 0]
    xpos 567
    ypos -436
   }
-push $N4d412400
+push $N8f04000
   BlinkScript {
    inputs 2
    kernelSourceFile C:/Users/mshaw/Documents/Tests/Blink/Cloud_Gen_03/Scripts/WORKING/VoxelAverage_transform_002.cpp
@@ -154,6 +153,7 @@ push $N4d412400
    VoxelAverage_bbox_max {{"\[lindex \[metadata bbox] 3]"} {"\[lindex \[metadata bbox] 4]"} {"\[lindex \[metadata bbox] 5]"}}
    VoxelAverage_resolution {{"\[lindex \[metadata resolution] 0]"} {"\[lindex \[metadata resolution] 1]"} {"\[lindex \[metadata resolution] 2]"}}
    VoxelAverage_range {{parent.range}}
+   rebuild_finalise ""
    name BlinkScript3
    selected true
    xpos 362
@@ -171,7 +171,7 @@ push $N4d412400
   xpos 1238
   ypos 51
  }
-push $N4d643000
+push $N8e9d540
  Dot {
   name Dot2
   note_font_size 20
